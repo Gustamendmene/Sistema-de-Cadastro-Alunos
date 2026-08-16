@@ -1,22 +1,8 @@
 import flet as ft
-
+import sys 
 
 def criar_menu_lateral(page: ft.Page, tela_ativa: str) -> ft.Container:
-    """
-    Monta a barra lateral azul de navegação, igual à da imagem de referência.
-
-    Parâmetros:
-        page: a página do Flet (precisamos dela para trocar de tela
-              quando o usuário clicar em um item do menu).
-        tela_ativa: string que identifica qual tela está sendo exibida
-              no momento ("menu", "cadastrar" ou "listar"). É usada só
-              para destacar visualmente o botão correspondente.
-    """
-
-    # Os imports das telas ficam DENTRO das funções (e não no topo do
-    # arquivo) para evitar import circular: sidebar.py precisa conhecer
-    # as telas, e as telas precisam do sidebar.py. Importando aqui
-    # dentro, o Python só resolve essa dependência na hora do clique.
+ 
     def ir_para_menu(e):
         from telas.menu_principal import tela_menu_principal
         tela_menu_principal(page)
@@ -30,24 +16,19 @@ def criar_menu_lateral(page: ft.Page, tela_ativa: str) -> ft.Container:
         tela_listar_alunos(page)
 
     def sair(e):
-        page.window.close()
+        page.window.prevent_close = False
+        sys.exit(0)
 
     def item_menu(icone, texto, chave, ao_clicar):
         ativo = chave == tela_ativa
-        return ft.Container(
-            content=ft.Row(
-                [
-                    ft.Icon(icone, color=ft.Colors.WHITE, size=20),
-                    ft.Text(texto, color=ft.Colors.WHITE, size=14),
-                ],
-                spacing=10,
-            ),
-            padding=ft.Padding.symmetric(vertical=12, horizontal=14),
-            border_radius=8,
+        return ft.Container(content=ft.ListTile(
+            leading=icone,
+            title=texto,
             bgcolor=ft.Colors.BLUE_600 if ativo else ft.Colors.TRANSPARENT,
             on_click=ao_clicar,
-            ink=True,
-        )
+            icon_color=ft.Colors.WHITE,
+            text_color=ft.Colors.WHITE
+        ),border_radius=ft.BorderRadius.all(10))
 
     return ft.Container(
         width=230,
@@ -57,8 +38,10 @@ def criar_menu_lateral(page: ft.Page, tela_ativa: str) -> ft.Container:
             expand=True,
             controls=[
                 ft.Row(
-                    [ft.Icon(ft.Icons.SCHOOL, color=ft.Colors.WHITE, size=34)],
-                    alignment=ft.MainAxisAlignment.CENTER,
+                    controls=[
+                            ft.Icon(ft.Icons.SCHOOL, color=ft.Colors.WHITE, size=34,align=ft.Alignment.CENTER),   
+                        ],
+                    alignment=ft.MainAxisAlignment.CENTER
                 ),
                 ft.Text(
                     "Sistema de\nCadastro de Alunos",
@@ -66,11 +49,17 @@ def criar_menu_lateral(page: ft.Page, tela_ativa: str) -> ft.Container:
                     size=14,
                     weight=ft.FontWeight.BOLD,
                     text_align=ft.TextAlign.CENTER,
+                    width=200
                 ),
                 ft.Divider(color=ft.Colors.BLUE_700, height=30),
-                item_menu(ft.Icons.HOME_OUTLINED, "Menu Principal", "menu", ir_para_menu),
-                item_menu(ft.Icons.PERSON_ADD_ALT_1, "Cadastrar Aluno", "cadastrar", ir_para_cadastro),
-                item_menu(ft.Icons.LIST_ALT, "Listar/Excluir Alunos", "listar", ir_para_listagem),
+                ft.ListView(
+                    controls=[
+                        item_menu(ft.Icons.HOME_OUTLINED, "Menu Principal", "menu", ir_para_menu),
+                        item_menu(ft.Icons.PERSON_ADD_ALT_1, "Cadastrar Aluno", "cadastrar", ir_para_cadastro),
+                        item_menu(ft.Icons.LIST_ALT, "Listar/Excluir Alunos", "listar", ir_para_listagem),
+                    ]
+                ),
+
                 ft.Container(expand=True),  # empurra o "Sair" para o rodapé
                 ft.Divider(color=ft.Colors.BLUE_700),
                 item_menu(ft.Icons.LOGOUT, "Sair", "sair", sair),
