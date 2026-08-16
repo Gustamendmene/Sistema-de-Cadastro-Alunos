@@ -1,7 +1,7 @@
 import flet as ft
 from componentes.sidebar import criar_menu_lateral
 from dados.database import registrar_aluno
-
+from telas.listar_alunos import tela_listar_alunos
 
 def tela_cadastrar_aluno(page: ft.Page):
     page.clean()
@@ -21,7 +21,7 @@ def tela_cadastrar_aluno(page: ft.Page):
     def mostrar_status(mensagem, cor):
         page.show_dialog(
             ft.SnackBar(
-                content=ft.Text(mensagem),
+                content=ft.Text(mensagem,weight=ft.FontWeight.BOLD),
                 bgcolor=cor,
             )
         )
@@ -37,14 +37,16 @@ def tela_cadastrar_aluno(page: ft.Page):
 
         # Validação simples: nenhum campo pode ficar vazio.
         if not nome or not matricula or not curso:
-            mensagem_erro.value = "Preencha todos os campos antes de cadastrar."
+            limpar_formulario()
+            mostrar_status(f"Os campos Nome, Matrícula e Curso são obrigatórios.",ft.Colors.RED_700)
             page.update()
             return
         sucesso,erro = registrar_aluno(nome, matricula, curso)
+        nome_cadastrado = nome
         if(sucesso and erro == None):
-            nome_cadastrado = nome
             limpar_formulario()
             mostrar_status(f"Aluno '{nome_cadastrado}' cadastrado com sucesso!", ft.Colors.GREEN_700)
+            tela_listar_alunos(page)
         elif(erro == "Matricula"):
             limpar_formulario()
             mostrar_status(f"Aluno '{nome_cadastrado}' não pode ser cadastrado pois ja existe um aluno com esse numero de Matricula", ft.Colors.RED_700)
