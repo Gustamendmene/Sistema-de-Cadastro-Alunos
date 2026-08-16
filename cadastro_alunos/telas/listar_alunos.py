@@ -71,7 +71,7 @@ def tela_listar_alunos(page: ft.Page):
             expand=True,
             controls=[
                 ft.DataTable(
-                    border=ft.border.all(1, ft.Colors.GREY_300),
+                    border=ft.Border.all(1, ft.Colors.GREY_300),
                     border_radius=10,
                     vertical_lines=ft.BorderSide(1, ft.Colors.GREY_200),
                     horizontal_lines=ft.BorderSide(1, ft.Colors.GREY_200),
