@@ -50,7 +50,8 @@ def abrir_dialog_editar_aluno(page: ft.Page, id_aluno, nome, matricula, curso, a
                 ao_atualizar()
             page.show_dialog(ft.SnackBar(
                 ft.Text("Aluno atualizado com sucesso!"),
-                bgcolor=ft.Colors.GREEN_700
+                bgcolor=ft.Colors.GREEN_700,
+                weight=ft.FontWeight.BOLD
             ))
             page.update()
 
@@ -58,7 +59,8 @@ def abrir_dialog_editar_aluno(page: ft.Page, id_aluno, nome, matricula, curso, a
             page.pop_dialog()
             page.show_dialog(ft.SnackBar(
                 ft.Text("Já existe um aluno com essa matrícula."),
-                bgcolor=ft.Colors.RED_700
+                bgcolor=ft.Colors.RED_700,
+                weight=ft.FontWeight.BOLD
             ))
             page.update()
 
@@ -66,7 +68,8 @@ def abrir_dialog_editar_aluno(page: ft.Page, id_aluno, nome, matricula, curso, a
             page.pop_dialog()
             page.show_dialog(ft.SnackBar(
                 ft.Text("Ocorreu um erro inesperado ao tentar atualizar o aluno"),
-                bgcolor=ft.Colors.RED_700
+                bgcolor=ft.Colors.RED_700,
+                weight=ft.FontWeight.BOLD
             ))
             page.update()
 
